@@ -16,6 +16,16 @@
 						"internalType": "uint256",
 						"name": "_id",
 						"type": "uint256"
+					},
+					{
+						"internalType": "string[]",
+						"name": "_attributeKeys",
+						"type": "string[]"
+					},
+					{
+						"internalType": "string[]",
+						"name": "_attributeValues",
+						"type": "string[]"
 					}
 				],
 				"name": "addItemToAdress",
@@ -42,30 +52,6 @@
 						"internalType": "string[]",
 						"name": "",
 						"type": "string[]"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "itemDatabase",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "owner",
-						"type": "address"
 					}
 				],
 				"stateMutability": "view",
@@ -100,11 +86,11 @@
 	},
 	"sources": {
 		"contracts/ItemOwnership.sol": {
-			"keccak256": "0xd93005a99490ee140f29a8aa37dabc4c5caaec4f7eeae376f476277743b4f249",
+			"keccak256": "0xd059e07f8652817ca653a7f4e243f1b604c3a9d78cb0e8f8bee2fb0bb37ac228",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://eaf2edf7abb2075853f0129da4adba2bbdf93fd3d7755cb37dc419b1d3f9c22a",
-				"dweb:/ipfs/QmcRwmTYnphotxYkfwdhupNsaVySFym3K3kNCqDnejjwn2"
+				"bzz-raw://5ba86c13598457896d1ef340a4cda182f9ea61527e50659d132323fe67a66054",
+				"dweb:/ipfs/QmUpku5MCesXx5N72mSsPrf1H7W4iX6gTKQv7VdsTRa9AX"
 			]
 		}
 	},

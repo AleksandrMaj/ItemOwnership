@@ -16,7 +16,7 @@ contract ContractOwnable {
 }
 
 contract ItemOwnership is ContractOwnable {
-    mapping(address => mapping(uint256 => Item)) public itemDatabase;
+    mapping(address => mapping(uint256 => Item)) itemDatabase;
 
     struct Item {
         address owner;
@@ -29,14 +29,16 @@ contract ItemOwnership is ContractOwnable {
     }
 
     //Item methods
-    function addItemToAdress(uint256 _id) public {
-
+    function addItemToAdress(uint256 _id, string[] memory _attributeKeys, string[] memory _attributeValues) public {
         Item storage newItem = itemDatabase[msg.sender][_id];
         newItem.owner = msg.sender;
-        newItem.attributes["key1"] = "value1"; //TODO: Be able to determine own attributes
-        newItem.attributes["key2"] = "value2";
-        newItem.attributeKeys.push("key1");
-        newItem.attributeKeys.push("key2");
+
+        require(_attributeKeys.length == _attributeValues.length, "[ERROR] The length of the keys and values are note equal");
+
+        for(uint256 i = 0; i < _attributeKeys.length; i++) {
+            newItem.attributes[_attributeKeys[i]] = _attributeValues[i];
+        }
+        newItem.attributeKeys = _attributeKeys;
     }
 
     function getAttributesOfItemByID(uint256 _id) public view returns(string[] memory, string[] memory) {
@@ -66,11 +68,6 @@ contract ItemOwnership is ContractOwnable {
     }
 
     function AddressHasItem() public {
-
-    }
-
-    //Item attributes
-    function GetAttributesOfItem() public {
 
     }*/
 }
