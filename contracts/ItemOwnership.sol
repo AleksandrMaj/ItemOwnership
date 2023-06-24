@@ -6,7 +6,10 @@ contract ContractOwnable {
     address owner;
 
     modifier isContractOwner() {
-        require(msg.sender == owner, "For this you need to be the owner of the contract");
+        require(
+            msg.sender == owner,
+            "For this you need to be the owner of the contract"
+        );
         _;
     }
 
@@ -23,41 +26,61 @@ contract ItemOwnership is ContractOwnable {
         mapping(string => string) attributes;
         string[] attributeKeys;
     }
-    
+
     constructor() {
         super;
     }
 
     //Item methods
-    function addItemToAdress(uint256 _id, string[] memory _attributeKeys, string[] memory _attributeValues) public {
-        require(itemDatabase[msg.sender][_id].owner != msg.sender, "[ERROR] ID always in use");
+    function addItemToAdress(
+        uint256 _id,
+        string[] memory _attributeKeys,
+        string[] memory _attributeValues
+    ) public {
+        require(
+            itemDatabase[msg.sender][_id].owner != msg.sender,
+            "[ERROR] ID always in use"
+        );
 
         Item storage newItem = itemDatabase[msg.sender][_id];
         newItem.owner = msg.sender;
 
-        require(_attributeKeys.length == _attributeValues.length, "[ERROR] The length of the keys and values are note equal");
+        require(
+            _attributeKeys.length == _attributeValues.length,
+            "[ERROR] The length of the keys and values are note equal"
+        );
 
-        for(uint256 i = 0; i < _attributeKeys.length; i++) {
+        for (uint256 i = 0; i < _attributeKeys.length; i++) {
             newItem.attributes[_attributeKeys[i]] = _attributeValues[i];
         }
         newItem.attributeKeys = _attributeKeys;
     }
 
-    function getAttributesOfItemByID(uint256 _id) public view returns(string[] memory, string[] memory) {
+    function getAttributesOfItemByID(uint256 _id)
+        public
+        view
+        returns (string[] memory, string[] memory)
+    {
         Item storage item = itemDatabase[msg.sender][_id];
-        string[] memory attributeValues = new string[](item.attributeKeys.length);
+        string[] memory attributeValues = new string[](
+            item.attributeKeys.length
+        );
 
-        for(uint256 i = 0; i < item.attributeKeys.length; i++) {
+        for (uint256 i = 0; i < item.attributeKeys.length; i++) {
             attributeValues[i] = item.attributes[item.attributeKeys[i]];
         }
         return (item.attributeKeys, attributeValues);
     }
 
-    /*function removeItemFromAddress() public {
-
+    function removeItemFromAddress(uint256 _id) public {
+        require(
+            itemDatabase[msg.sender][_id].owner == msg.sender,
+            "[ERROR] ID not available"
+        );
+        delete itemDatabase[msg.sender][_id];
     }
 
-    function updateItemFromAddress() public {
+    /*function updateItemFromAddress() public {
 
     }
 
@@ -73,4 +96,3 @@ contract ItemOwnership is ContractOwnable {
 
     }*/
 }
-
