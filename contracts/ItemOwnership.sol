@@ -30,6 +30,8 @@ contract ItemOwnership is ContractOwnable {
 
     //Item methods
     function addItemToAdress(uint256 _id, string[] memory _attributeKeys, string[] memory _attributeValues) public {
+        require(itemDatabase[msg.sender][_id].owner != msg.sender, "[ERROR] ID always in use");
+
         Item storage newItem = itemDatabase[msg.sender][_id];
         newItem.owner = msg.sender;
 
