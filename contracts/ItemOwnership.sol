@@ -18,7 +18,7 @@ contract ContractOwnable {
     }
 }
 
-contract ItemOwnership is ContractOwnable {
+contract ItemValidator {
     mapping(address => mapping(uint256 => Item)) itemDatabase;
 
     struct Item {
@@ -27,6 +27,24 @@ contract ItemOwnership is ContractOwnable {
         string[] attributeKeys;
     }
 
+    modifier itemIsAvailable(uint256 _id) {
+        require(
+            itemDatabase[msg.sender][_id].owner == msg.sender,
+            "[ERROR] ID not available"
+        );
+        _;
+    }
+
+    modifier itemIdIsNotUsed(uint256 _id) {
+        require(
+            itemDatabase[msg.sender][_id].owner != msg.sender,
+            "[ERROR] ID always in use"
+        );
+        _;
+    }
+}
+
+contract ItemOwnership is ContractOwnable, ItemValidator {
     constructor() {
         super;
     }
@@ -36,12 +54,7 @@ contract ItemOwnership is ContractOwnable {
         uint256 _id,
         string[] memory _attributeKeys,
         string[] memory _attributeValues
-    ) public {
-        require(
-            itemDatabase[msg.sender][_id].owner != msg.sender,
-            "[ERROR] ID always in use"
-        );
-
+    ) public itemIdIsNotUsed(_id) {
         Item storage newItem = itemDatabase[msg.sender][_id];
         newItem.owner = msg.sender;
 
@@ -57,7 +70,7 @@ contract ItemOwnership is ContractOwnable {
     }
 
     function getAttributesOfItemByID(uint256 _id)
-        public
+        public itemIsAvailable(_id)
         view
         returns (string[] memory, string[] memory)
     {
@@ -72,11 +85,7 @@ contract ItemOwnership is ContractOwnable {
         return (item.attributeKeys, attributeValues);
     }
 
-    function removeItemFromAddress(uint256 _id) public {
-        require(
-            itemDatabase[msg.sender][_id].owner == msg.sender,
-            "[ERROR] ID not available"
-        );
+    function removeItemFromAddress(uint256 _id) public itemIsAvailable(_id) {
         delete itemDatabase[msg.sender][_id];
     }
 
