@@ -55,13 +55,13 @@ contract ItemOwnership is ContractOwnable, ItemValidator {
         string[] memory _attributeKeys,
         string[] memory _attributeValues
     ) public itemIdIsNotUsed(_id) {
-        Item storage newItem = itemDatabase[msg.sender][_id];
-        newItem.owner = msg.sender;
-
         require(
             _attributeKeys.length == _attributeValues.length,
             "[ERROR] The length of the keys and values are note equal"
         );
+
+        Item storage newItem = itemDatabase[msg.sender][_id];
+        newItem.owner = msg.sender;
 
         for (uint256 i = 0; i < _attributeKeys.length; i++) {
             newItem.attributes[_attributeKeys[i]] = _attributeValues[i];
@@ -70,8 +70,9 @@ contract ItemOwnership is ContractOwnable, ItemValidator {
     }
 
     function getAttributesOfItemByID(uint256 _id)
-        public itemIsAvailable(_id)
+        public
         view
+        itemIsAvailable(_id)
         returns (string[] memory, string[] memory)
     {
         Item storage item = itemDatabase[msg.sender][_id];
@@ -89,11 +90,26 @@ contract ItemOwnership is ContractOwnable, ItemValidator {
         delete itemDatabase[msg.sender][_id];
     }
 
-    /*function updateItemFromAddress() public {
+    function updateItemFromAddress(
+        uint256 _id,
+        string[] memory _attributeKeys,
+        string[] memory _attributeValues
+    ) public itemIsAvailable(_id) {
+        require(
+            _attributeKeys.length == _attributeValues.length,
+            "[ERROR] The length of the keys and values are note equal"
+        );
+        
+        Item storage item = itemDatabase[msg.sender][_id];
+        item.owner = msg.sender;
 
+        for (uint256 i = 0; i < _attributeKeys.length; i++) {
+            item.attributes[_attributeKeys[i]] = _attributeValues[i];
+        }
+        item.attributeKeys = _attributeKeys;
     }
 
-    function getAllItemsFromAddress() public {
+    /*function getAllItemsFromAddress() public {
 
     }
 
