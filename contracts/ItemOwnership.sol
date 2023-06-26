@@ -20,6 +20,7 @@ contract ContractOwnable {
 
 contract ItemValidator {
     mapping(address => mapping(uint256 => Item)) itemDatabase;
+    mapping(address => uint256[]) public itemIdList;
 
     struct Item {
         address owner;
@@ -67,6 +68,7 @@ contract ItemOwnership is ContractOwnable, ItemValidator {
             newItem.attributes[_attributeKeys[i]] = _attributeValues[i];
         }
         newItem.attributeKeys = _attributeKeys;
+        itemIdList[msg.sender].push(_id);
     }
 
     function getAttributesOfItemByID(uint256 _id)
@@ -87,6 +89,12 @@ contract ItemOwnership is ContractOwnable, ItemValidator {
     }
 
     function removeItemFromAddress(uint256 _id) public itemIsAvailable(_id) {
+        for (uint256 i = 0; i < itemIdList[msg.sender].length; i++) {
+            if (itemIdList[msg.sender][i] == _id)
+                removeItemFromArray(i);
+                // delete itemIdList[msg.sender][i]; //The slot gets filled with 0 instead of getting removed
+        }
+
         delete itemDatabase[msg.sender][_id];
     }
 
@@ -99,7 +107,7 @@ contract ItemOwnership is ContractOwnable, ItemValidator {
             _attributeKeys.length == _attributeValues.length,
             "[ERROR] The length of the keys and values are note equal"
         );
-        
+
         Item storage item = itemDatabase[msg.sender][_id];
         item.owner = msg.sender;
 
@@ -107,6 +115,19 @@ contract ItemOwnership is ContractOwnable, ItemValidator {
             item.attributes[_attributeKeys[i]] = _attributeValues[i];
         }
         item.attributeKeys = _attributeKeys;
+    }
+
+    function getAmountOfItems() public view returns (uint256) {
+        return itemIdList[msg.sender].length;
+    }
+
+    function removeItemFromArray(uint256 index) private  {
+        if (index >= itemIdList[msg.sender].length) return; //Make it to require statement
+
+        for (uint256 i = index; i<itemIdList[msg.sender].length-1; i++){
+            itemIdList[msg.sender][i] = itemIdList[msg.sender][i+1];
+        }
+        itemIdList[msg.sender].pop();
     }
 
     /*function getAllItemsFromAddress() public {
