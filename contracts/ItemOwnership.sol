@@ -134,15 +134,10 @@ contract ItemOwnership is ContractOwnable, ItemValidator {
         return itemIdList[msg.sender];
     }
 
-    /*function getAllItemsFromAddress() public {
-
+    function AddressHasItem(string searchKey, string value) public view returns(bool) {
+        for (uint256 i = 0; i < itemIdList[msg.sender].length-1; i++) {
+            if(itemDatabase[msg.sender][itemIdList[msg.sender][i]].attributes[searchKey] == value) return true;
+        } 
+        return false;
     }
-
-    function getItemFromAddress() public {
-
-    }
-
-    function AddressHasItem() public {
-
-    }*/
 }
