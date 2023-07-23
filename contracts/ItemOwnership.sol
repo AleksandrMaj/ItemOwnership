@@ -20,7 +20,7 @@ contract ContractOwnable {
 
 contract ItemValidator {
     mapping(address => mapping(uint256 => Item)) itemDatabase;
-    mapping(address => uint256[]) public itemIdList;
+    mapping(address => uint256[]) itemIdList;
 
     struct Item {
         address owner;
@@ -128,6 +128,10 @@ contract ItemOwnership is ContractOwnable, ItemValidator {
             itemIdList[msg.sender][i] = itemIdList[msg.sender][i+1];
         }
         itemIdList[msg.sender].pop();
+    }
+
+    function getAllItemsFromAddress() public view returns(uint256[] memory) {
+        return itemIdList[msg.sender];
     }
 
     /*function getAllItemsFromAddress() public {
