@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-//Contract to manage ofter of the contract
+//Contract to manage owner of the contract
 contract ContractOwnable {
     address owner;
 
@@ -92,7 +92,6 @@ contract ItemOwnership is ContractOwnable, ItemValidator {
         for (uint256 i = 0; i < itemIdList[msg.sender].length; i++) {
             if (itemIdList[msg.sender][i] == _id)
                 removeItemFromArray(i);
-                // delete itemIdList[msg.sender][i]; //The slot gets filled with 0 instead of getting removed
         }
 
         delete itemDatabase[msg.sender][_id];
@@ -122,7 +121,7 @@ contract ItemOwnership is ContractOwnable, ItemValidator {
     }
 
     function removeItemFromArray(uint256 index) private  {
-        if (index >= itemIdList[msg.sender].length) return; //Make it to require statement
+        if (index >= itemIdList[msg.sender].length) return;
 
         for (uint256 i = index; i<itemIdList[msg.sender].length-1; i++){
             itemIdList[msg.sender][i] = itemIdList[msg.sender][i+1];
